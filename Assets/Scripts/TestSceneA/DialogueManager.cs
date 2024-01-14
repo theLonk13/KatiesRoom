@@ -4,28 +4,43 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Manages the Dialogue Boxes
 public class DialogueManager : MonoBehaviour
 {
 
-    public Text nameText;
-    public Text dialogueText;
+    public Text nameText; // Name of character's dialogue
+    public Text dialogueText; // Text in dialogue box;
 
-    //public Animator animator;
+    //public Animator animator; // Animator component of dialogue box
 
     private Queue<string> sentences;
 
-    private string[] optionsText;
-    [SerializeField] private GameObject[] optionButtons;
-    public Text[] optionButtonsText;
+    // Global stats for player
+    public int statLikeKatie;
+    public int statRealPerson;
+    public int statAffection;
+
+    public Text[] choiceText; // Text in choice boxes
+    private GameObject connectingDialogue; // The next dialogue that should play
     void Start()
     {
         sentences = new Queue<string>();
+        
     }
 
     public void StartDialogue (Dialogue dialogue)
     {
         //animator.SetBool("IsOpen", true);
-        optionsText = dialogue.options;
+        statLikeKatie += dialogue.PointsLikeKatie;
+        statRealPerson += dialogue.PointsRealPerson;
+        statAffection += dialogue.PointsAffection;
+
+        if (connectingDialogue != null)
+        {
+            connectingDialogue.SetActive(false);
+        }
+        connectingDialogue = dialogue.connectingDialogue;
+
 
         nameText.text = dialogue.name;
 
@@ -66,33 +81,20 @@ public class DialogueManager : MonoBehaviour
     {
         Debug.Log("End of conversation");
         //animator.SetBool("IsOpen", false);
-        if (optionsText != null)
+        
+        if(connectingDialogue != null) //add another part to check if the connecting is choices
         {
-            ShowChoices();
-        }
-    }
-    void ShowChoices()
-    {
-        Debug.Log(optionsText[0]);
-        //Have code to have buttons show (also hide buttons)
-        for(int i = 0; i < optionButtonsText.Length; i++)
-        {
-            optionButtonsText[i].text = optionsText[i];
+            connectingDialogue.SetActive(true);
+            StartChoices(connectingDialogue.GetComponent<DialogueChoicesTrigger>().choices);
         }
     }
 
-    void Option1()
+    public void StartChoices(DialogueChoices choices)
     {
-
+        for (int i = 0; i < choiceText.Length; i++)
+        {
+            choiceText[i].text = choices.choices[i];
+        }
     }
 
-    void Option2()
-    {
-
-    }
-
-    void Option3()
-    {
-
-    }
 }

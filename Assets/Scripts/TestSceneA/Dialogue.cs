@@ -5,11 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class Dialogue
 {
-    public string name;
+    public string name; // Name of character
     [TextArea(3, 10)]
-    public string[] sentences;
+    public string[] sentences; // The dialogue
 
-    public string[] options; //later somehow add more variables to hold 3 variables int LikeKatie, RealPerson, Affection
+    public int PointsLikeKatie;
+    public int PointsRealPerson;
+    public int PointsAffection;
 
-    public GameObject[] connectingDialogue; //dialogue for options
+    public GameObject connectingDialogue; // dialogue for choices
 }
